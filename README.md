@@ -29,7 +29,7 @@ AI Game Character Generator is an interactive character concept creation app for
 - Pandas
 - Pillow
 - Requests
-- OpenAI API
+- OpenAI APIs
 - python-dotenv
 
 ## Architecture
@@ -46,6 +46,7 @@ Prompt Builder
 History Storage + Reference Image Storage
  ↓
 Optional OpenAI Image Generation
+```
 
 ## Project Structure
 
@@ -62,6 +63,7 @@ ai_game_character_generator/
 ├── requirements.txt
 ├── .env
 └── README.md
+```
 
 ## Project Summary
 
@@ -82,3 +84,15 @@ The backend exposes custom API endpoints for prompt generation, history persiste
 
 ### API Status And History
 ![API Status And History](assets/screenshots/sidebar-history.png)
+
+## Environment Variables
+
+This project uses an OpenAI API key for optional image generation.
+
+Create a `.env` file in the main project folder and add:
+
+```text
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+Do not upload your real `.env` file to GitHub.
