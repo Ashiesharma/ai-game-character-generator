@@ -317,6 +317,9 @@ with st.sidebar:
 
     st.divider()
     st.header("Prompt History")
+    if st.button("Clear History"):
+        clear_history_with_api()
+        st.rerun()
 
     try:
         history = get_history_with_api()

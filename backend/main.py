@@ -1,5 +1,6 @@
 import base64
 import os
+import sqlite3
 from datetime import datetime
 from openai import OpenAI
 import pandas as pd
@@ -22,10 +23,38 @@ REFERENCE_IMAGES_FOLDER = os.path.join(OUTPUT_FOLDER, "reference_images")
 GENERATED_IMAGES_FOLDER = os.path.join(OUTPUT_FOLDER, "generated_images")
 
 HISTORY_FILE = os.path.join(DATA_FOLDER, "history.csv")
+DATABASE_FILE = os.path.join(DATA_FOLDER, "app.db")
 
 os.makedirs(DATA_FOLDER, exist_ok=True)
 os.makedirs(REFERENCE_IMAGES_FOLDER, exist_ok=True)
 os.makedirs(GENERATED_IMAGES_FOLDER, exist_ok=True)
+
+def initialize_database():
+    connection = sqlite3.connect(DATABASE_FILE)
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS prompt_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            created_at TEXT NOT NULL,
+            character_prompt TEXT NOT NULL,
+            art_style TEXT NOT NULL,
+            environment TEXT NOT NULL,
+            enhancement TEXT NOT NULL,
+            reference_instruction TEXT,
+            reference_image_path TEXT,
+            generated_image_path TEXT,
+            image_status TEXT,
+            final_prompt TEXT NOT NULL
+        )
+        """
+    )
+
+    connection.commit()
+    connection.close()
+
+initialize_database()
 
 app = FastAPI(
     title="AI Game Character Generator API",
@@ -55,27 +84,41 @@ class ImageGenerationRequest(BaseModel):
     final_prompt: str
 
 def save_prompt_history(request: HistoryRequest):
-    new_row = {
-        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "character_prompt": request.character_prompt,
-        "art_style": request.art_style,
-        "environment": request.environment,
-        "enhancement": request.enhancement,
-        "reference_instruction": request.reference_instruction,
-        "reference_image_path": request.reference_image_path,
-        "generated_image_path": request.generated_image_path,
-        "image_status": request.image_status,
-        "final_prompt": request.final_prompt
-    }
+    connection = sqlite3.connect(DATABASE_FILE)
+    cursor = connection.cursor()
 
-    if os.path.exists(HISTORY_FILE):
-        history_df = pd.read_csv(HISTORY_FILE)
-        history_df = pd.concat([history_df, pd.DataFrame([new_row])], ignore_index=True)
-    else:
-        history_df = pd.DataFrame([new_row])
+    cursor.execute(
+        """
+        INSERT INTO prompt_history (
+            created_at,
+            character_prompt,
+            art_style,
+            environment,
+            enhancement,
+            reference_instruction,
+            reference_image_path,
+            generated_image_path,
+            image_status,
+            final_prompt
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            request.character_prompt,
+            request.art_style,
+            request.environment,
+            request.enhancement,
+            request.reference_instruction,
+            request.reference_image_path,
+            request.generated_image_path,
+            request.image_status,
+            request.final_prompt
+        )
+    )
 
-    history_df.to_csv(HISTORY_FILE, index=False)
-
+    connection.commit()
+    connection.close()
 @app.get("/")
 def home():
     return {
@@ -131,27 +174,40 @@ def save_history(request: HistoryRequest):
 
 @app.get("/history")
 def get_history():
-    if not os.path.exists(HISTORY_FILE):
-        return {
-            "status": "success",
-            "history": []
-        }
+    connection = sqlite3.connect(DATABASE_FILE)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
 
-    history_df = pd.read_csv(HISTORY_FILE)
+    cursor.execute(
+        """
+        SELECT
+            id,
+            created_at,
+            character_prompt,
+            art_style,
+            environment,
+            enhancement,
+            reference_instruction,
+            reference_image_path,
+            generated_image_path,
+            image_status,
+            final_prompt
+        FROM prompt_history
+        ORDER BY id DESC
+        LIMIT 10
+        """
+    )
 
-    if history_df.empty:
-        return {
-            "status": "success",
-            "history": []
-        }
+    rows = cursor.fetchall()
+    connection.close()
 
-    history_df = history_df.fillna("")
-    history = history_df.tail(10).iloc[::-1].to_dict(orient="records")
+    history = [dict(row) for row in rows]
 
     return {
         "status": "success",
         "history": history
     }
+
 @app.post("/upload-reference")
 def upload_reference(file: UploadFile = File(...)):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -198,8 +254,13 @@ def generate_image(request: ImageGenerationRequest):
 
 @app.delete("/history")
 def clear_history():
-    if os.path.exists(HISTORY_FILE):
-        os.remove(HISTORY_FILE)
+    connection = sqlite3.connect(DATABASE_FILE)
+    cursor = connection.cursor()
+
+    cursor.execute("DELETE FROM prompt_history")
+
+    connection.commit()
+    connection.close()
 
     return {
         "status": "success",
