@@ -266,3 +266,27 @@ def clear_history():
         "status": "success",
         "message": "Prompt history cleared successfully."
     }
+@app.delete("/history/{history_id}")
+def delete_history_item(history_id: int):
+    connection = sqlite3.connect(DATABASE_FILE)
+    cursor = connection.cursor()
+
+    cursor.execute(
+        "DELETE FROM prompt_history WHERE id = ?",
+        (history_id,)
+    )
+
+    connection.commit()
+    deleted_count = cursor.rowcount
+    connection.close()
+
+    if deleted_count == 0:
+        return {
+            "status": "not_found",
+            "message": "History item not found."
+        }
+
+    return {
+        "status": "success",
+        "message": "History item deleted successfully."
+    }

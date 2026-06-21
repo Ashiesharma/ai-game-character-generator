@@ -92,6 +92,11 @@ def clear_history_with_api():
 
     return response.json()
 
+def delete_history_item_with_api(history_id):
+    response = requests.delete(f"{API_URL}/history/{history_id}", timeout=30)
+    response.raise_for_status()
+
+    return response.json()
 
 def upload_reference_with_api(reference_image):
     if reference_image is None:
@@ -348,6 +353,10 @@ with st.sidebar:
 
                     if row.get("image_status"):
                         st.caption(f"Image status: {row['image_status']}")
+                    
+                    if st.button("Delete", key=f"delete_history_{row['id']}"):
+                            delete_history_item_with_api(row["id"])
+                            st.rerun()
 
     except requests.exceptions.RequestException:
         st.warning("History is unavailable because the API is not running.")
