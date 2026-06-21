@@ -68,3 +68,17 @@ ai_game_character_generator/
 Built an AI-assisted game character creation platform using Streamlit and a custom FastAPI backend. The system supports companion-based setup, reference-guided prompt creation, prompt history management, reference image upload, optional OpenAI image generation, and safe image-generation skipping for development.
 
 The backend exposes custom API endpoints for prompt generation, history persistence, history retrieval, history clearing, reference image upload, and image generation orchestration.
+
+## Screenshots
+
+### Companion Setup
+![Companion Setup](assets/screenshots/setup-popup.png)
+
+### Main Generator Top
+![Main Generator Top](assets/screenshots/main-app-top.png)
+
+### Main Generator Bottom
+![Main Generator Bottom](assets/screenshots/main-app-bottom.png)
+
+### API Status And History
+![API Status And History](assets/screenshots/sidebar-history.png)
