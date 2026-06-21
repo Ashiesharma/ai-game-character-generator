@@ -96,3 +96,9 @@ OPENAI_API_KEY=your_openai_api_key_here
 ```
 
 Do not upload your real `.env` file to GitHub.
+
+## Notes
+
+Image generation is implemented as an optional backend endpoint. During development, the app includes a "Generate image now" checkbox so prompt generation and history workflows can be tested without spending image-generation credits.
+
+If OpenAI billing or credits are unavailable, the app still supports prompt generation, reference upload, history tracking, and prompt download.
