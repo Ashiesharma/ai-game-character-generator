@@ -10,7 +10,6 @@ OUTPUT_FOLDER = "outputs"
 GENERATED_IMAGES_FOLDER = os.path.join(OUTPUT_FOLDER, "generated_images")
 REFERENCE_IMAGES_FOLDER = os.path.join(OUTPUT_FOLDER, "reference_images")
 
-HISTORY_FILE = os.path.join(DATA_FOLDER, "history.csv")
 API_URL = "http://127.0.0.1:8000"
 
 os.makedirs(DATA_FOLDER, exist_ok=True)
@@ -92,11 +91,13 @@ def clear_history_with_api():
 
     return response.json()
 
+
 def delete_history_item_with_api(history_id):
     response = requests.delete(f"{API_URL}/history/{history_id}", timeout=30)
     response.raise_for_status()
 
     return response.json()
+
 
 def upload_reference_with_api(reference_image):
     if reference_image is None:
@@ -322,6 +323,7 @@ with st.sidebar:
 
     st.divider()
     st.header("Prompt History")
+
     if st.button("Clear History"):
         clear_history_with_api()
         st.rerun()
@@ -353,10 +355,10 @@ with st.sidebar:
 
                     if row.get("image_status"):
                         st.caption(f"Image status: {row['image_status']}")
-                    
+
                     if st.button("Delete", key=f"delete_history_{row['id']}"):
-                            delete_history_item_with_api(row["id"])
-                            st.rerun()
+                        delete_history_item_with_api(row["id"])
+                        st.rerun()
 
     except requests.exceptions.RequestException:
         st.warning("History is unavailable because the API is not running.")
@@ -556,14 +558,41 @@ if clear_clicked:
     st.session_state.setup_complete = False
     st.rerun()
 
+
 st.divider()
 st.subheader("Recent Concepts")
+
+search_query = st.text_input(
+    "Search saved concepts",
+    placeholder="Search by character idea, style, or environment"
+)
+
+status_filter = st.selectbox(
+    "Filter by image status",
+    ["All", "skipped", "success", "error"]
+)
 
 try:
     recent_history = get_history_with_api()
 
+    if search_query.strip():
+        query = search_query.lower()
+
+        recent_history = [
+            row for row in recent_history
+            if query in row.get("character_prompt", "").lower()
+            or query in row.get("art_style", "").lower()
+            or query in row.get("environment", "").lower()
+        ]
+
+    if status_filter != "All":
+        recent_history = [
+            row for row in recent_history
+            if row.get("image_status") == status_filter
+        ]
+
     if not recent_history:
-        st.info("No saved concepts yet.")
+        st.info("No matching concepts found.")
     else:
         for row in recent_history[:3]:
             with st.container():
