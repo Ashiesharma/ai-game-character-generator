@@ -20,10 +20,14 @@ AI Game Character Generator is an interactive character concept creation app for
 - Image generation skip mode for saving credits
 - Sidebar API health status
 - Sidebar prompt history
+- SQLite-backed prompt history
+- Individual history item deletion
+- Recent Concepts gallery section
 
 ## Tech Stack
 
 - Python
+- SQLite
 - Streamlit
 - FastAPI
 - Pandas
@@ -43,7 +47,7 @@ FastAPI Backend
  ↓
 Prompt Builder
  ↓
-History Storage + Reference Image Storage
+SQLite History Database + Reference Image Storage
  ↓
 Optional OpenAI Image Generation
 ```
@@ -56,7 +60,7 @@ ai_game_character_generator/
 ├── backend/
 │   └── main.py
 ├── data/
-│   └── history.csv
+│   └── app.db
 ├── outputs/
 │   ├── generated_images/
 │   └── reference_images/
