@@ -555,3 +555,43 @@ if clear_clicked:
     st.session_state.reset_counter += 1
     st.session_state.setup_complete = False
     st.rerun()
+
+st.divider()
+st.subheader("Recent Concepts")
+
+try:
+    recent_history = get_history_with_api()
+
+    if not recent_history:
+        st.info("No saved concepts yet.")
+    else:
+        for row in recent_history[:3]:
+            with st.container():
+                st.markdown(
+                    f"""
+                    <div style="
+                        padding: 18px;
+                        border-radius: 14px;
+                        background: rgba(255, 255, 255, 0.08);
+                        border: 1px solid rgba(255, 255, 255, 0.16);
+                        margin-bottom: 16px;
+                    ">
+                        <h4 style="margin-bottom: 8px; color: #ffffff;">
+                            {row['art_style']} - {row['environment']}
+                        </h4>
+                        <p style="margin-bottom: 6px; color: #dfe4ff;">
+                            {row['character_prompt']}
+                        </p>
+                        <p style="margin-bottom: 0; color: #b8c0ff;">
+                            Image status: {row.get('image_status', 'unknown')}
+                        </p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+                with st.expander("View Full Prompt"):
+                    st.write(row["final_prompt"])
+
+except requests.exceptions.RequestException:
+    st.warning("Recent concepts are unavailable because the API is not running.")
