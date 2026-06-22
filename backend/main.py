@@ -1,12 +1,10 @@
-import base64
 import os
-from datetime import datetime
 from backend.prompt_service import build_character_prompt
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, UploadFile
 from openai import OpenAI
-from PIL import Image
 from pydantic import BaseModel
+from backend.image_service import generate_character_image, save_reference_image
 
 from backend.database import (
     clear_prompt_history,
@@ -26,13 +24,6 @@ if not os.getenv("OPENAI_API_KEY"):
 else:
     print("OPENAI_API_KEY loaded successfully.")
 
-
-OUTPUT_FOLDER = "outputs"
-REFERENCE_IMAGES_FOLDER = os.path.join(OUTPUT_FOLDER, "reference_images")
-GENERATED_IMAGES_FOLDER = os.path.join(OUTPUT_FOLDER, "generated_images")
-
-os.makedirs(REFERENCE_IMAGES_FOLDER, exist_ok=True)
-os.makedirs(GENERATED_IMAGES_FOLDER, exist_ok=True)
 
 initialize_database()
 
@@ -144,38 +135,17 @@ def delete_history_item(history_id: int):
 
 @app.post("/upload-reference")
 def upload_reference(file: UploadFile = File(...)):
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_extension = file.filename.split(".")[-1]
-    file_name = f"reference_{timestamp}.{file_extension}"
-    file_path = os.path.join(REFERENCE_IMAGES_FOLDER, file_name)
-
-    image = Image.open(file.file)
-    image.save(file_path)
+    file_path = save_reference_image(file)
 
     return {
         "status": "success",
         "reference_image_path": file_path
     }
 
-
 @app.post("/generate-image")
 def generate_image(request: ImageGenerationRequest):
     try:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f"character_{timestamp}.png"
-        file_path = os.path.join(GENERATED_IMAGES_FOLDER, file_name)
-
-        result = client.images.generate(
-            model="gpt-image-1",
-            prompt=request.final_prompt,
-            size="1024x1024"
-        )
-
-        image_base64 = result.data[0].b64_json
-        image_bytes = base64.b64decode(image_base64)
-
-        with open(file_path, "wb") as image_file:
-            image_file.write(image_bytes)
+        file_path = generate_character_image(client, request.final_prompt)
 
         return {
             "status": "success",
