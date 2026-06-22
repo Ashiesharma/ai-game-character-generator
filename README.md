@@ -23,6 +23,7 @@ AI Game Character Generator is an interactive character concept creation app for
 - SQLite-backed prompt history
 - Individual history item deletion
 - Recent Concepts gallery section
+- Modular backend structure with separate database, prompt, and image services
 
 ## Tech Stack
 
@@ -58,7 +59,10 @@ Optional OpenAI Image Generation
 ai_game_character_generator/
 ├── app.py
 ├── backend/
-│   └── main.py
+|    ├── main.py
+|    ├── database.py
+|    ├── prompt_service.py
+|    └── image_service.py
 ├── data/
 │   └── app.db
 ├── outputs/
