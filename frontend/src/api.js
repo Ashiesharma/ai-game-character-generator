@@ -104,3 +104,12 @@ export async function clearHistory() {
 
     return response.json();
 }
+export async function checkApiHealth() {
+    const response = await fetch(`${API_URL}/`);
+
+    if (!response.ok) {
+        throw new Error("API is offline.");
+    }
+
+    return response.json();
+}

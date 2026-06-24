@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, Wand2 } from "lucide-react";
 import {
+  checkApiHealth,
   clearHistory,
   deleteHistoryItem,
   generateImage,
@@ -162,7 +163,7 @@ function App() {
   const [librarySearch, setLibrarySearch] = useState("");
   const [libraryStatusFilter, setLibraryStatusFilter] = useState("All");
   const [libraryMessage, setLibraryMessage] = useState("");
-
+  const [apiOnline, setApiOnline] = useState(false);
   const [characterPrompt, setCharacterPrompt] = useState("");
   const [enhancement, setEnhancement] = useState("Balanced");
   const [referenceFile, setReferenceFile] = useState(null);
@@ -174,6 +175,19 @@ function App() {
   const [generateImageNow, setGenerateImageNow] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    async function checkStatus() {
+      try {
+        await checkApiHealth();
+        setApiOnline(true);
+      } catch {
+        setApiOnline(false);
+      }
+    }
+
+    checkStatus();
+  }, []);
 
   async function handleGenerateCharacter() {
     if (!characterPrompt.trim()) {
@@ -360,6 +374,9 @@ ${characterPrompt}`);
         </div>
 
         <div className="nav-actions">
+          <span className={`status-pill ${apiOnline ? "online" : "offline"}`}>
+            {apiOnline ? "API connected" : "API offline"}
+          </span>
           <button className="ghost-button" onClick={() => setActiveView("studio")}>
             Studio
           </button>
@@ -437,6 +454,16 @@ ${characterPrompt}`);
                   onChange={(event) => setReferenceFile(event.target.files[0] || null)}
                 />
               </label>
+
+              {referenceFile && (
+                <div className="reference-preview">
+                  <img src={URL.createObjectURL(referenceFile)} alt="Reference preview" />
+                  <div>
+                    <strong>{referenceFile.name}</strong>
+                    <span>{Math.round(referenceFile.size / 1024)} KB</span>
+                  </div>
+                </div>
+              )}
 
               <label>
                 Reference guidance
