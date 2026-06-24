@@ -7,3 +7,5 @@ data/history.csv
 outputs/generated_images/
 outputs/reference_images/
 data/app.db
+frontend/node_modules/
+frontend/dist/

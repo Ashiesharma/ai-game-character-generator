@@ -364,18 +364,60 @@ with st.sidebar:
         st.warning("History is unavailable because the API is not running.")
 
 
-st.title("AI Game Character Generator")
-
 st.markdown(
     """
-    <p style="font-size: 18px; color: #dfe4ff; margin-top: -8px;">
-        Design game-ready characters using prompts, styles, environments, and visual references.
-    </p>
+    <div style="
+        padding: 28px 30px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, rgba(124, 92, 255, 0.24), rgba(34, 197, 154, 0.14));
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+        margin-bottom: 28px;
+    ">
+        <p style="
+            margin: 0 0 8px 0;
+            color: #b8c0ff;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        ">
+            AI Creative Studio
+        </p>
+        <h1 style="
+            margin: 0;
+            color: #ffffff;
+            font-size: 46px;
+            line-height: 1.08;
+        ">
+            AI Game Character Generator
+        </h1>
+        <p style="
+            color: #dfe4ff;
+            font-size: 18px;
+            margin: 14px 0 18px 0;
+            max-width: 880px;
+        ">
+            Design original game characters using prompts, visual references, creative direction, and saved concept history.
+        </p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <span style="padding: 7px 11px; border-radius: 999px; background: rgba(255,255,255,0.10); color: #ffffff; font-size: 13px;">
+                Prompt to Character
+            </span>
+            <span style="padding: 7px 11px; border-radius: 999px; background: rgba(255,255,255,0.10); color: #ffffff; font-size: 13px;">
+                Reference Inspired
+            </span>
+            <span style="padding: 7px 11px; border-radius: 999px; background: rgba(255,255,255,0.10); color: #ffffff; font-size: 13px;">
+                Style Controlled
+            </span>
+            <span style="padding: 7px 11px; border-radius: 999px; background: rgba(255,255,255,0.10); color: #ffffff; font-size: 13px;">
+                Concept History
+            </span>
+        </div>
+    </div>
     """,
     unsafe_allow_html=True
 )
-
-st.divider()
 
 st.subheader("Create Your Character")
 

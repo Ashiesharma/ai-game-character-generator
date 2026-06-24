@@ -2,6 +2,7 @@ import os
 from backend.prompt_service import build_character_prompt
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 from pydantic import BaseModel
 from backend.image_service import generate_character_image, save_reference_image
@@ -31,6 +32,16 @@ initialize_database()
 app = FastAPI(
     title="AI Game Character Generator API",
     version="1.0.0"
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
