@@ -167,7 +167,10 @@ select:focus {
   border-radius: 999px;
   background: linear-gradient(135deg, var(--dragon-primary), #72ffd8 32%, var(--dragon-secondary) 72%, #24194e);
   border: 2px solid rgba(255, 255, 255, 0.42);
-  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.22), 0 0 26px rgba(78, 255, 210, 0.28);
+  box-shadow:
+    inset 0 0 20px rgba(255, 255, 255, 0.24),
+    inset 0 -10px 24px rgba(0, 0, 0, 0.20),
+    0 0 26px var(--dragon-aura);
 }
 
 .dragon-tail {
@@ -699,4 +702,194 @@ pre {
 .reference-preview span {
   color: #bfc7ff;
   font-size: 13px;
+}
+
+.concept-meta {
+  display: grid;
+  gap: 7px;
+}
+
+.concept-meta span {
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #cfd6ff;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.dragon-trail {
+  position: absolute;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--dragon-aura), transparent);
+  filter: blur(8px);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.trail-one {
+  width: 310px;
+  height: 18px;
+  left: 34px;
+  top: 258px;
+  transform: rotate(-20deg);
+  animation: trailPulse 3.8s ease-in-out infinite;
+}
+
+.trail-two {
+  width: 260px;
+  height: 14px;
+  left: 126px;
+  top: 124px;
+  transform: rotate(-14deg);
+  animation: trailPulse 4.4s ease-in-out infinite reverse;
+}
+
+.dragon-spines {
+  position: absolute;
+  left: 122px;
+  top: 112px;
+  width: 275px;
+  height: 120px;
+  pointer-events: none;
+}
+
+.dragon-spines span {
+  position: absolute;
+  width: 18px;
+  height: 34px;
+  background: var(--dragon-accent);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  filter: drop-shadow(0 0 12px var(--dragon-accent));
+  opacity: 0.88;
+}
+
+.dragon-spines span:nth-child(1) {
+  left: 8px;
+  top: 76px;
+  transform: rotate(-38deg);
+}
+
+.dragon-spines span:nth-child(2) {
+  left: 64px;
+  top: 48px;
+  transform: rotate(-22deg);
+}
+
+.dragon-spines span:nth-child(3) {
+  left: 124px;
+  top: 36px;
+  transform: rotate(-8deg);
+}
+
+.dragon-spines span:nth-child(4) {
+  left: 184px;
+  top: 24px;
+  transform: rotate(10deg);
+}
+
+.dragon-spines span:nth-child(5) {
+  left: 232px;
+  top: 10px;
+  transform: rotate(26deg);
+}
+
+.dragon-scales {
+  position: absolute;
+  left: 80px;
+  top: 124px;
+  width: 330px;
+  height: 160px;
+  pointer-events: none;
+}
+
+.dragon-scales span {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: 0 0 12px var(--dragon-primary);
+  opacity: 0.78;
+}
+
+.dragon-scales span:nth-child(1) {
+  left: 28px;
+  top: 102px;
+}
+
+.dragon-scales span:nth-child(2) {
+  left: 82px;
+  top: 76px;
+}
+
+.dragon-scales span:nth-child(3) {
+  left: 132px;
+  top: 58px;
+}
+
+.dragon-scales span:nth-child(4) {
+  left: 184px;
+  top: 36px;
+}
+
+.dragon-scales span:nth-child(5) {
+  left: 226px;
+  top: 30px;
+}
+
+.dragon-scales span:nth-child(6) {
+  left: 266px;
+  top: 16px;
+}
+
+.dragon-head::before {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  border-radius: inherit;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.65), transparent 48%);
+  opacity: 0.58;
+  pointer-events: none;
+}
+
+.dragon-head::after {
+  content: "";
+  position: absolute;
+  right: -18px;
+  top: 36px;
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  background: radial-gradient(circle, var(--dragon-accent), transparent 70%);
+  filter: blur(3px);
+  opacity: 0.9;
+}
+
+.eye {
+  background: #04110f;
+  box-shadow:
+    0 0 8px #ffffff,
+    0 0 16px var(--dragon-accent),
+    0 0 28px var(--dragon-accent);
+}
+
+.whisker {
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(245, 255, 252, 0.95), transparent);
+  filter: drop-shadow(0 0 8px var(--dragon-primary));
+}
+
+@keyframes trailPulse {
+
+  0%,
+  100% {
+    opacity: 0.38;
+    transform: translateX(0) rotate(var(--trail-rotate, -18deg));
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: translateX(16px) rotate(var(--trail-rotate, -18deg));
+  }
 }

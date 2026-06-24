@@ -130,6 +130,9 @@ function DragonCompanion({ artStyle, companionMood, environment }) {
       transition={{ duration: 1.4, ease: "easeOut" }}
     >
       <div className="dragon-aura" />
+      <div className="dragon-trail trail-one" />
+      <div className="dragon-trail trail-two" />
+
       <motion.div
         className="dragon-body"
         animate={{ y: [0, -10, 0], rotate: [0, 1.5, 0] }}
@@ -139,6 +142,21 @@ function DragonCompanion({ artStyle, companionMood, environment }) {
         <div className="dragon-curve curve-one" />
         <div className="dragon-curve curve-two" />
         <div className="dragon-neck" />
+        <div className="dragon-spines">
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+        <div className="dragon-scales">
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
         <div className="dragon-head">
           <span className="horn horn-left" />
           <span className="horn horn-right" />
@@ -578,6 +596,20 @@ ${characterPrompt}`);
 
                   <h3>{item.character_prompt}</h3>
                   <p>{item.environment}</p>
+
+                  <div className="concept-meta">
+                    {item.created_at && <span>Created: {item.created_at}</span>}
+                    {item.enhancement && <span>Direction: {item.enhancement}</span>}
+                    {item.reference_image_path && <span>Reference: {item.reference_image_path}</span>}
+                    {item.generated_image_path && <span>Generated: {item.generated_image_path}</span>}
+                  </div>
+
+                  {item.reference_instruction && (
+                    <details>
+                      <summary>Reference guidance</summary>
+                      <pre>{item.reference_instruction}</pre>
+                    </details>
+                  )}
 
                   <details>
                     <summary>View prompt</summary>
