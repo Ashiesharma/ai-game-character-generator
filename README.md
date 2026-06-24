@@ -24,6 +24,12 @@ AI Game Character Generator is an interactive character concept creation app for
 - Individual history item deletion
 - Recent Concepts gallery section
 - Modular backend structure with separate database, prompt, and image services
+- React-based character studio
+- Animated dragon companion setup experience
+- Style-adaptive dragon companion colors
+- Concept library with search, filter, delete, and clear actions
+- API status indicator in the React frontend
+- Reference image preview
 
 ## Tech Stack
 
@@ -36,6 +42,30 @@ AI Game Character Generator is an interactive character concept creation app for
 - Requests
 - OpenAI APIs
 - python-dotenv
+- React
+- Vite
+- Framer Motion
+- Lucide React
+
+## Frontend
+
+The main frontend is built with React and Vite. It includes a dragon companion setup experience, character studio, reference image preview, API status indicator, and concept library.
+
+Run the React frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+React runs at:
+
+```text
+http://localhost:5173
+```
+
+The older Streamlit prototype is still kept as `app.py`.
 
 ## Architecture
 
@@ -92,6 +122,15 @@ The backend exposes custom API endpoints for prompt generation, history persiste
 
 ### API Status And History
 ![API Status And History](assets/screenshots/sidebar-history.png)
+
+### Dragon Companion Setup
+![Dragon Companion Setup](assets/screenshots/react-dragon-setup.png)
+
+### Character Studio
+![Character Studio](assets/screenshots/react-character-studio.png)
+
+### Concept Library
+![Concept Library](assets/screenshots/react-concept-library.png)
 
 ## Environment Variables
 
